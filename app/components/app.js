@@ -37,6 +37,7 @@ class App extends React.Component {
         let ranked = [];
 
         // rank all doctors against current doctor according to relevancy
+        // 1 = same area AND specialty, 2 = same area only, 3 = different area, same specialty, 4 = all others
         this.state.doctors.forEach(dr =>  {
             if (dr.id === currentDoc.id) {
             } else if (dr.area.toLowerCase() === currentDoc.area.toLowerCase() && dr.specialty.toLowerCase() === currentDoc.specialty.toLowerCase()) {
@@ -54,6 +55,7 @@ class App extends React.Component {
             }
         });
 
+        // sort each group by review_score so within the group, better review score is better
         function sortByReviews(a, b) {
             if ( a.review_score < b.review_score ) {
                 return 1;
@@ -78,6 +80,7 @@ class App extends React.Component {
 
         //window.sorted = ['FIRST GROUP'].concat(firstGroup, ['SECOND GROUP'], secondGroup, ['THIRD GROUP'], thirdGroup);
 
+        // concatenate groups according to rank.
         return firstGroup
             .concat(secondGroup, thirdGroup)
             .slice(0, 6) || [];
