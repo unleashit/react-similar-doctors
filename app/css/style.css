@@ -1,0 +1,28 @@
+body {
+    background: #F5F5F5;
+}
+.doctors-list .specialty {
+    margin-right: 10px;
+}
+.doctors-list .area {
+    margin-left: 10px;
+}
+.doctors-list li:hover {
+    cursor: pointer;
+    background: #FAFAFA;
+}
+.similar-doctors {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.similar-doctors ul {
+    margin: 0;
+}
+.similar-doctors .well {
+    background: #ECECEC;
+}
+.view-profile {
+    margin-top: 19px;
+    border: none;
+}
