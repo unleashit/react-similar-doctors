@@ -1,5 +1,5 @@
 # react-similar-doctors
-React app that displays a list of doctors with detail views. In the detail view, there is component that displays related doctors using a custom relevance algorithm. Uses React, Webpack, ES6, Json Server and Axios.
+React app that displays a list of doctors with detail views. In the detail view, there is component that displays related doctors using a custom relevance algorithm. Uses React, Webpack, ES6, json-server and Axios.
 
 ### To use
 
@@ -8,4 +8,6 @@ React app that displays a list of doctors with detail views. In the detail view,
 3. `npm run start`
 4. Navigate to http://localhost:8080
 
-`npm run start` uses concurrently to load both json-server (simple rest api) and webpack-dev-server at once.
+`npm run start` uses concurrently to load both json-server (simple rest api, used locally here) and webpack-dev-server at once.
+
+To ouput a production version, run `npm run production`. This will create a dist folder that can run natively in a browser. It will still expect the api, so either run `npm run json` or set up on a server and update the ajax url.
