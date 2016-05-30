@@ -20,7 +20,6 @@ class App extends React.Component {
         axios.get('http://localhost:3000/doctors?_limit=50')
             .then((resp) => {
                 this.setState({doctors: resp.data});
-               // console.log(resp.data);
             })
             .catch((err) => {
                 console.log(err);
@@ -55,44 +54,32 @@ class App extends React.Component {
             }
         });
 
-        // seperate out rank 1 (matching area AND specialty), then sort by review_score
-        let firstSort = ranked.filter(item => item.score === 1);
-        firstSort = firstSort.sort((a, b) => {
+        function sortByReviews(a, b) {
             if ( a.review_score < b.review_score ) {
-                return -1;
-            }
-            if ( a.review_score > b.review_score ) {
                 return 1;
             }
+            if ( a.review_score > b.review_score ) {
+                return -1;
+            }
             return 0;
-        });
+        }
+
+        // seperate out rank 1 (matching area AND specialty), then sort by review_score
+        let firstGroup = ranked.filter(item => item.score === 1);
+        firstGroup = firstGroup.sort(sortByReviews);
 
         // seperate out rank 2 (matching area but not specialty), then sort by review_score
-        let secondSort = ranked.filter(item => item.score === 2);
-        secondSort = secondSort.sort((a, b) => {
-            if ( a.review_score < b.review_score ) {
-                return -1;
-            }
-            if ( a.review_score > b.review_score ) {
-                return 1;
-            }
-            return 0;
-        });
+        let secondGroup = ranked.filter(item => item.score === 2);
+        secondGroup = secondGroup.sort(sortByReviews);
 
         // seperate out rank 3 (matching specialty but not area), then sort by review_score
-        let thirdSort = ranked.filter(item => item.score > 2);
-        thirdSort = thirdSort.sort((a, b) => {
-                if ( a.review_score < b.review_score ) {
-                    return -1;
-                }
-                if ( a.review_score > b.review_score ) {
-                    return 1;
-                }
-                return 0;
-            });
+        let thirdGroup = ranked.filter(item => item.score > 2);
+        thirdGroup = thirdGroup.sort(sortByReviews);
 
-        return firstSort
-            .concat(secondSort, thirdSort)
+        //window.sorted = ['FIRST GROUP'].concat(firstGroup, ['SECOND GROUP'], secondGroup, ['THIRD GROUP'], thirdGroup);
+
+        return firstGroup
+            .concat(secondGroup, thirdGroup)
             .slice(0, 6) || [];
     }
 
