@@ -1,5 +1,5 @@
 # react-similar-doctors
-React app that displays a list of doctors with detail views. In the detail view, there is component that displays related doctors using a custom relevance algorithm. Uses React, Webpack, ES, Json Server and Axios.
+React app that displays a list of doctors with detail views. In the detail view, there is component that displays related doctors using a custom relevance algorithm. Uses React, Webpack, ES6, Json Server and Axios.
 
 ### To use
 
