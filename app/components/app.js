@@ -17,7 +17,7 @@ class App extends React.Component {
         };
     }
     getDrs() {
-        axios.get('http://localhost:3000/doctors?_limit=50')
+        axios.get('http://localhost:3000/doctors?_limit=100')
             .then((resp) => {
                 this.setState({doctors: resp.data});
             })
@@ -34,24 +34,21 @@ class App extends React.Component {
 
     getSimilarDrs(currentDoc) {
 
-        let ranked = [];
+        let groupOne = [], groupTwo = [], groupThree = [], groupFour = [];
 
         // rank all doctors against current doctor according to relevancy
         // 1 = same area AND specialty, 2 = same area only, 3 = different area, same specialty, 4 = all others
         this.state.doctors.forEach(dr =>  {
             if (dr.id === currentDoc.id) {
+                // do nothing, to skip the current doctor
             } else if (dr.area.toLowerCase() === currentDoc.area.toLowerCase() && dr.specialty.toLowerCase() === currentDoc.specialty.toLowerCase()) {
-                dr.score = 1;
-                ranked.push(dr);
+                groupOne.push(dr);
             } else if (dr.area.toLowerCase() === currentDoc.area.toLowerCase()) {
-                dr.score = 2;
-                ranked.push(dr);
+                groupTwo.push(dr);
             } else if (dr.specialty.toLowerCase() === currentDoc.specialty.toLowerCase()) {
-                dr.score = 3;
-                ranked.push(dr);
+                groupThree.push(dr);
             } else {
-                dr.score = 4;
-                ranked.push(dr);
+                groupFour.push(dr);
             }
         });
 
@@ -66,24 +63,38 @@ class App extends React.Component {
             return 0;
         }
 
-        // seperate out rank 1 (matching area AND specialty), then sort by review_score
-        let firstGroup = ranked.filter(item => item.score === 1);
-        firstGroup = firstGroup.sort(sortByReviews);
+        // sort rank 1 (matching area AND specialty) by review_score
+        groupOne = groupOne.sort(sortByReviews);
 
-        // seperate out rank 2 (matching area but not specialty), then sort by review_score
-        let secondGroup = ranked.filter(item => item.score === 2);
-        secondGroup = secondGroup.sort(sortByReviews);
+        // sort rank 2 (matching area but not specialty) by review_score
+        groupTwo = groupTwo.sort(sortByReviews);
 
-        // seperate out rank 3 (matching specialty but not area), then sort by review_score
-        let thirdGroup = ranked.filter(item => item.score > 2);
-        thirdGroup = thirdGroup.sort(sortByReviews);
+        // sort rank 3 (matching specialty but not area) by review_score
+        groupThree = groupThree.sort(sortByReviews);
 
-        //window.sorted = ['FIRST GROUP'].concat(firstGroup, ['SECOND GROUP'], secondGroup, ['THIRD GROUP'], thirdGroup);
+        // sort rank 4 (everything else) by review_score
+        groupFour = groupFour.sort(sortByReviews);
 
-        // concatenate groups according to rank.
-        return firstGroup
-            .concat(secondGroup, thirdGroup)
-            .slice(0, 6) || [];
+        //window.sorted = ['FIRST GROUP'].concat(groupOne, ['SECOND GROUP'], groupTwo, ['THIRD GROUP'], groupThree);
+
+        // concatenate groups back together, set a limit
+        return groupOne
+            .concat(groupTwo, groupThree, groupFour)
+            .slice(0, 5) || [];
+    }
+
+    starRating(rating) {
+        let stars = [],
+            i;
+
+        // if rating is missing/incorrect, assume 5 stars
+        rating = (typeof rating === 'number' && rating >=1 && rating <=5) ? rating : 5;
+
+        for (i=0; i<rating; i++) {
+            stars.push(<i className="fa fa-star" key={i}></i>);
+        }
+
+        return stars;
     }
 
     setView(view, id) {
@@ -103,19 +114,18 @@ class App extends React.Component {
         this.getDrs();
     }
 
-    componentWillUnmount() {
-
-    }
-
     render() {
 
         // quick and dirty routing
         let view;
 
         if (this.state.view === 'list') {
-            view = <Doctors setView={this.setView.bind(this)} {...this.state} />
+            view = <Doctors setView={this.setView.bind(this)}
+                        {...this.state} />
         } else if (this.state.view === 'detail') {
-            view = <Doctor setView={this.setView.bind(this)} {...this.state} />
+            view = <Doctor setView={this.setView.bind(this)}
+                        starRating={this.starRating.bind(this)}
+                        {...this.state} />
         }
 
         return (

@@ -22,7 +22,7 @@ class Doctor extends React.Component {
                         <li className="list-group-item"><strong>Specialty:</strong> {dr.specialty}</li>
                         <li className="list-group-item"><strong>Gender:</strong> {dr.gender}</li>
                         <li className="list-group-item"><strong>email:</strong> {dr.email}</li>
-                        <li className="list-group-item"><strong>Rating:</strong> {dr.review_score}</li>
+                        <li className="list-group-item"><strong>Rating:</strong> {this.props.starRating(dr.review_score)}</li>
                         <li className="list-group-item"><strong>Member Since:</strong> {joinDate}</li>
                         <li className="list-group-item"><strong>Bio:</strong> {dr.bio}</li>
                     </ul>

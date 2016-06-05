@@ -15,7 +15,7 @@ class SimilarDoctors extends React.Component {
                         <li className="list-group-item">Dr. {dr.first_name} {dr.last_name}</li>
                         <li className="list-group-item">Area: {dr.area}</li>
                         <li className="list-group-item">Specialty: {dr.specialty}</li>
-                        <li className="list-group-item">Rating: {dr.review_score}</li>
+                        <li className="list-group-item">Rating: {this.props.starRating(dr.review_score)}</li>
                     </ul>
                     <button className="view-profile btn btn-block btn-danger">view profile</button>
                 </li>
