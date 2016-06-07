@@ -13,16 +13,22 @@ class App extends React.Component {
             doctors: [],
             doctor: {},
             similarDoctors: [],
-            view: 'list'
+            view: 'list',
+            network: true
         };
     }
+
     getDrs() {
         axios.get('http://localhost:3000/doctors?_limit=100')
             .then((resp) => {
-                this.setState({doctors: resp.data});
+                this.setState({
+                    doctors: resp.data,
+                    network: true
+                });
             })
             .catch((err) => {
-                console.log(err);
+                this.setState({network: false});
+                console.error(err);
             });
     }
 
@@ -33,7 +39,6 @@ class App extends React.Component {
     }
 
     getSimilarDrs(currentDoc) {
-
         let groupOne = [], groupTwo = [], groupThree = [], groupFour = [];
 
         // rank all doctors against current doctor according to relevancy
@@ -119,9 +124,13 @@ class App extends React.Component {
         // quick and dirty routing
         let view;
 
-        if (this.state.view === 'list') {
+        if (!this.state.network) {
+            view = <h2>Unable to connect to the database. Is the api and/or network available?</h2>
+
+        } else if (this.state.view === 'list') {
             view = <Doctors setView={this.setView.bind(this)}
                         {...this.state} />
+
         } else if (this.state.view === 'detail') {
             view = <Doctor setView={this.setView.bind(this)}
                         starRating={this.starRating.bind(this)}
